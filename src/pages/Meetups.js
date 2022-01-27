@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import MeetupList from "../components/meetups/MeetupList";
 
 const DUMMY_DATA = [
@@ -22,6 +24,38 @@ const DUMMY_DATA = [
 ];
 
 function Meetups() {
+  const [isLoading, setLoading] = useState(true);
+  const [meetups, setMeetups] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        const meetups = [];
+        for (const key in data) {
+          const meetup = {
+            id: key,
+            ...data[key],
+          };
+
+          meetups.push(meetup);
+        }
+        setLoading(false);
+        setMeetups(data);
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section>
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
   return (
     <section>
       <h1>All Meetups</h1>
